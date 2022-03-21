@@ -9,16 +9,7 @@ from selenium.webdriver.common.by import By
 
 from twilio.rest import Client
 
-
-s = Service(ChromeDriverManager().install())
-options = webdriver.ChromeOptions()
-options.add_experimental_option('excludeSwitches', ['enable-logging'])
-driver = webdriver.Chrome(service=s, options=options)
-
-wait = WebDriverWait(driver, 10)
-
-
-def get_movie_names():
+def get_movie_names(driver):
     movies_elements = driver.find_elements(By.TAG_NAME, 'alamo-card-title')
     movies = []
 
@@ -54,9 +45,14 @@ def send_text(movie):
 
 
 def text_if_movie_out(url):
+    s = Service(ChromeDriverManager().install())
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    driver = webdriver.Chrome(service=s, options=options)
+
     driver.get(url)
     time.sleep(5)
-    movies = get_movie_names()
+    movies = get_movie_names(driver)
     movie_out = find_if_movie_is_out(movies, movie_to_search)
 
     if movie_out["movie_out"] == True:
@@ -64,5 +60,7 @@ def text_if_movie_out(url):
 
     driver.close()
 
+while True:
+    text_if_movie_out(URL)
+    time.sleep(60)
 
-text_if_movie_out(URL)
