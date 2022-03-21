@@ -55,7 +55,7 @@ def send_text(movie):
 
 def text_if_movie_out(url):
     driver.get(url)
-    time.sleep(1)
+    time.sleep(5)
     movies = get_movie_names()
     movie_out = find_if_movie_is_out(movies, movie_to_search)
 
